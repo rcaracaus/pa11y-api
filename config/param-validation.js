@@ -1,22 +1,32 @@
 import Joi from 'joi';
 
 export default {
-  // POST /api/users
-  createUser: {
+  // POST /api/issues
+  createIssue: {
     body: {
-      username: Joi.string().required(),
-      mobileNumber: Joi.string().regex(/^[1-9][0-9]{9}$/).required()
+      code: Joi.string().required(),
+      context: Joi.string().required(),
+      message: Joi.string().required(),
+      selector: Joi.string().required(),
+      type: Joi.string().required(),
+      typeCode: Joi.number().required(),
+      url: Joi.string().required()
     }
   },
 
-  // UPDATE /api/users/:userId
-  updateUser: {
+  // UPDATE /api/issues/:issueId
+  updateIssue: {
     body: {
-      username: Joi.string().required(),
-      mobileNumber: Joi.string().regex(/^[1-9][0-9]{9}$/).required()
+      code: Joi.string().required(),
+      context: Joi.string().required(),
+      message: Joi.string().required(),
+      selector: Joi.string().required(),
+      type: Joi.string().required(),
+      typeCode: Joi.number().required(),
+      url: Joi.string().required()
     },
     params: {
-      userId: Joi.string().hex().required()
+      issueId: Joi.string().hex().required()
     }
   },
 
