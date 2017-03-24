@@ -30,6 +30,35 @@ export default {
     }
   },
 
+  // POST /api/reports
+  createReport: {
+    body: {
+      urls: Joi.array().items(
+        Joi.object().keys({
+            url: Joi.string().required()
+          }
+        ),
+      ),
+      standard: Joi.string().required()
+    }
+  },
+
+  // UPDATE /api/reports/:issueId
+  updateReport: {
+    body: {
+      urls: Joi.array().items(
+          Joi.object().keys({
+                  url: Joi.string().required()
+              }
+          ),
+      ),
+      standard: Joi.string().required()
+    },
+    params: {
+      reportId: Joi.string().hex().required()
+    }
+  },
+
   // POST /api/auth/login
   login: {
     body: {
