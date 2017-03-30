@@ -12,6 +12,7 @@ easae/seoa11y-db:
     - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
   Build:
     - sudo service mongod start
+    - sudo service mongod status
     - nvm install 6
     - nvm use 6
     - npm install
