@@ -11,6 +11,7 @@ easae/seoa11y-db:
     - sudo apt-get -y install mongodb-org
     - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
   Build:
+    - sudo service mongod start
     - nvm install 6
     - nvm use 6
     - npm install
