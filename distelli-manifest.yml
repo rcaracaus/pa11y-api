@@ -16,7 +16,6 @@ easae/seoa11y-db:
 
   PkgInclude:
     - 'dist/'
-    - ['node_modules/', 'dist/node_modules/']
     - '.env'
 
   Start:
