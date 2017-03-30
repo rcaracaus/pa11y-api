@@ -61,6 +61,8 @@
     "mongoose": "4.7.4",
     "morgan": "1.7.0",
     "winston": "2.3.0",
+  },
+  "devDependencies": {
     "babel-cli": "6.18.0",
     "babel-core": "6.18.0",
     "babel-plugin-add-module-exports": "0.2.1",
