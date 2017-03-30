@@ -18,7 +18,7 @@ easae/seoa11y-db:
     - npm run build
 
   PkgInclude:
-    - 'dist'
+    - 'dist/'
     - '.env'
 
   Start:
