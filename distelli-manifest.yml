@@ -10,6 +10,8 @@ easae/seoa11y-db:
   Build:
     - nvm install 6
     - nvm use 6
+    - npm install
+    - npm run build
 
   PkgInclude:
     - '*'
@@ -19,7 +21,6 @@ easae/seoa11y-db:
     - sudo npm install -g gulp
     - sudo npm install
     - sudo npm test
-    - sudo npm run build
     - sudo pm2 stop all || true
     - sudo pm2 delete all || true
     - sudo pm2 start dist/index.js
