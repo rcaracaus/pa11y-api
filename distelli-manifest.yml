@@ -24,4 +24,4 @@ easae/seoa11y-db:
     - sudo npm install
     - sudo pm2 stop all || true
     - sudo pm2 delete all || true
-    - sudo pm2 start dist/index.js
+    - sudo pm2 start index.js
