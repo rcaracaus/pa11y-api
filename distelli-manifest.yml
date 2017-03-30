@@ -4,10 +4,11 @@ easae/seoa11y-db:
   # Ubuntu 14.04
 
   PreBuild:
+    - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+    - sudo echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
     - sudo apt-get -y update
     - sudo apt-get -y install build-essential libssl-dev curl mongodb-org
     - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
-    - sudo mongodb
   Build:
     - nvm install 6
     - nvm use 6
