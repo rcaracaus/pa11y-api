@@ -16,7 +16,9 @@ easae/seoa11y-db:
 
   Start:
     - sudo npm install -g pm2
+    - sudo npm install -g gulp
     - sudo npm install
+    - sudo npm test
     - sudo npm run build
     - sudo pm2 stop all || true
     - sudo pm2 delete all || true
