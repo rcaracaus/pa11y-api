@@ -17,7 +17,7 @@ mongoose.Promise = Promise;
 const mongoUri = `${config.mongo.host}:${config.mongo.port}`;
 mongoose.connect(mongoUri, { server: { socketOptions: { keepAlive: 1 } } });
 mongoose.connection.on('error', () => {
-  throw new Error(`unable to connect to database: ${config.db}`);
+  throw new Error(`unable to connect to database: ${config.mongo.host}:${config.mongo.port}`);
 });
 
 // print mongoose logs in dev env
