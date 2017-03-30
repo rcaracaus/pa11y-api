@@ -11,6 +11,7 @@
     "yarn": ">=0.20.3"
   },
   "scripts": {
+    "gulp": "gulp",
     "start": "gulp serve",
     "start:debug": "cross-env DEBUG=pa11y-api:* yarn start",
     "build": "gulp",
