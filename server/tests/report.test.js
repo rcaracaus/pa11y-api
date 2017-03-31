@@ -19,10 +19,7 @@ after((done) => {
 
 describe('## Report APIs', () => {
   let report = {
-    urls: [
-        { url: 'http:://www.google.com' },
-        { url: 'http:://www.google.com' }
-    ],
+    urls: ['http://www.google.com', 'http://www.google.com'],
     standard: 'WCAGAA',
   };
 
@@ -33,9 +30,6 @@ describe('## Report APIs', () => {
         .send(report)
         .expect(httpStatus.OK)
         .then((res) => {
-          res.body.urls.forEach(function(url, index) {
-            report.urls[index]._id = res.body.urls[index]._id;
-          });
           expect(res.body.urls).to.deep.equal(report.urls);
           expect(res.body.standard).to.equal(report.standard);
           report = res.body;
@@ -51,9 +45,6 @@ describe('## Report APIs', () => {
         .get(`/api/reports/${report._id}`)
         .expect(httpStatus.OK)
         .then((res) => {
-          res.body.urls.forEach(function(url, index) {
-            report.urls[index]._id = res.body.urls[index]._id;
-          });
           expect(res.body.urls).to.deep.equal(report.urls);
           expect(res.body.standard).to.equal(report.standard);
           done();

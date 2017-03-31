@@ -35,6 +35,10 @@ const IssueSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  reportId: {
+    type: String,
+    required: true
+  },
   createdAt: {
     type: Date,
     default: Date.now
