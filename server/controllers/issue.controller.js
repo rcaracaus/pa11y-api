@@ -81,8 +81,8 @@ function update(req, res, next) {
  * @returns {Issue[]}
  */
 function list(req, res, next) {
-  const { limit = 50, skip = 0 } = req.query;
-  Issue.list({ limit, skip })
+  const { limit = 50, skip = 0, code = '', reportId = '' } = req.query;
+  Issue.list({ limit, skip, code, reportId })
     .then(issues => res.json(issues))
     .catch(e => next(e));
 }

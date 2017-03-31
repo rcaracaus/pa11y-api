@@ -52,6 +52,14 @@ const IssueSchema = new mongoose.Schema({
  * - virtuals
  */
 
+IssueSchema.query.byCode = function byCode(code) {
+  return this.find({ code: new RegExp(code, 'i') });
+};
+
+IssueSchema.query.byReport = function byReport(reportId) {
+  return this.find({ reportId: new RegExp(reportId, 'i') });
+};
+
 /**
  * Methods
  */
@@ -85,13 +93,16 @@ IssueSchema.statics = {
    * @param {number} limit - Limit number of issues to be returned.
    * @returns {Promise<Issue[]>}
    */
-  list({ skip = 0, limit = 50 } = {}) {
+  list({ skip = 0, limit = 50, code = '', reportId = '' } = {}) {
     return this.find()
       .sort({ createdAt: -1 })
+      .byCode(code)
+      .byReport(reportId)
       .skip(skip)
       .limit(limit)
       .exec();
   }
+
 };
 
 /**
