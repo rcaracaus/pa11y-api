@@ -52,13 +52,13 @@ const IssueSchema = new mongoose.Schema({
  * - virtuals
  */
 
-IssueSchema.query.byCode = function (code) {
-  return this.find({ code: new RegExp(code, 'i') })
-}
+IssueSchema.query.byCode = function byCode(code) {
+  return this.find({ code: new RegExp(code, 'i') });
+};
 
-IssueSchema.query.byReport = function (reportId) {
+IssueSchema.query.byReport = function byReport(reportId) {
   return this.find({ reportId: new RegExp(reportId, 'i') });
-}
+};
 
 /**
  * Methods
