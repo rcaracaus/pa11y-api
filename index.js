@@ -5,7 +5,7 @@ import util from 'util';
 import config from './config/config';
 import app from './config/express';
 
-const debug = require('debug')('express-mongoose-es6-rest-api:index');
+const debug = require('debug')('pa11y-api:index');
 
 // make bluebird default Promise
 Promise = require('bluebird'); // eslint-disable-line no-global-assign
@@ -17,7 +17,7 @@ mongoose.Promise = Promise;
 const mongoUri = `${config.mongo.host}:${config.mongo.port}`;
 mongoose.connect(mongoUri, { server: { socketOptions: { keepAlive: 1 } } });
 mongoose.connection.on('error', () => {
-  throw new Error(`unable to connect to database: ${config.db}`);
+  throw new Error(`unable to connect to database: ${config.mongo.host}:${config.mongo.port}`);
 });
 
 // print mongoose logs in dev env
