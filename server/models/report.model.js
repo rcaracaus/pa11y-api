@@ -4,21 +4,18 @@ import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
 
 /**
- * UrlChildSchema
- */
-
-var urlsChildSchema = new mongoose.Schema({ url: 'string' });
-
-
-/**
  * Report Schema
  */
 const ReportSchema = new mongoose.Schema({
+  progress: {
+    type: Number,
+    default: 0
+  },
   standard: {
     type: String,
     required: true
   },
-  urls: [urlsChildSchema],
+  urls: [String],
   createdAt: {
     type: Date,
     default: Date.now

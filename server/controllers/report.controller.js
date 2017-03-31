@@ -28,8 +28,8 @@ function get(req, res) {
  */
 function create(req, res, next) {
   const report = new Report({
-    urls: req.body.urls,
     standard: req.body.standard,
+    urls: req.body.urls
   });
 
   report.save()
@@ -45,8 +45,9 @@ function create(req, res, next) {
  */
 function update(req, res, next) {
   const report = req.report;
-  report.urls = req.body.urls;
-  report.standard = req.body.standard;
+  report.urls = req.body.urls || report.urls;
+  report.standard = req.body.standard || report.standard;
+  report.progress = req.body.progress || report.progress;
 
   report.save()
     .then(savedReport => res.json(savedReport))
