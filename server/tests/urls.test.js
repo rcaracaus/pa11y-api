@@ -22,7 +22,7 @@ describe('## Urls APIs', () => {
     it('should get a list of urls', (done) => {
       request(app)
         .get('/api/urls')
-        .query({'reportId': '58dd2c6038880c5fe44825b6'})
+        .query({ reportId: '58dd2c6038880c5fe44825b6' })
         .expect(httpStatus.OK)
         .then((res) => {
           expect(res.body.urls).to.be.an('array');
