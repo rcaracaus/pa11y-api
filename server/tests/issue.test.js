@@ -25,6 +25,7 @@ describe('## Issue APIs', () => {
     selector: 'html > head > title',
     type: 'notice',
     typeCode: '3',
+    reportId: '1234hex1234',
     url: 'url'
   };
 
@@ -41,6 +42,7 @@ describe('## Issue APIs', () => {
           expect(res.body.selector).to.equal(issue.selector);
           expect(res.body.context).to.equal(issue.context);
           expect(res.body.type).to.equal(issue.type);
+          expect(res.body.reportId).to.equal(issue.reportId);
           expect(res.body.url).to.equal(issue.url);
           issue = res.body;
           done();
@@ -61,6 +63,7 @@ describe('## Issue APIs', () => {
           expect(res.body.selector).to.equal(issue.selector);
           expect(res.body.context).to.equal(issue.context);
           expect(res.body.type).to.equal(issue.type);
+          expect(res.body.reportId).to.equal(issue.reportId);
           expect(res.body.url).to.equal(issue.url);
           done();
         })
