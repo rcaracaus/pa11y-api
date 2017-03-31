@@ -52,7 +52,7 @@ describe('## Misc', () => {
         })
         .expect(httpStatus.BAD_REQUEST)
         .then((res) => {
-          expect(res.body.message).to.equal('"code" is required and "context" is required and "message" is required and "selector" is required and "type" is required and "typeCode" is required and "url" is required');
+          expect(res.body.message).to.equal('"code" is required and "context" is required and "message" is required and "selector" is required and "type" is required and "typeCode" is required and "reportId" is required and "url" is required');
           done();
         })
         .catch(done);

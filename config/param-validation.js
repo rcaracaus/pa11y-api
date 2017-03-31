@@ -10,6 +10,7 @@ export default {
       selector: Joi.string().required(),
       type: Joi.string().required(),
       typeCode: Joi.number().required(),
+      reportId: Joi.string().required(),
       url: Joi.string().required()
     }
   },
@@ -33,12 +34,7 @@ export default {
   // POST /api/reports
   createReport: {
     body: {
-      urls: Joi.array().items(
-        Joi.object().keys({
-            url: Joi.string().required()
-          }
-        ),
-      ),
+      urls: Joi.array().items(Joi.string()),
       standard: Joi.string().required()
     }
   },
@@ -46,13 +42,9 @@ export default {
   // UPDATE /api/reports/:issueId
   updateReport: {
     body: {
-      urls: Joi.array().items(
-          Joi.object().keys({
-                  url: Joi.string().required()
-              }
-          ),
-      ),
-      standard: Joi.string().required()
+      urls: Joi.array().items(Joi.string()),
+      standard: Joi.string(),
+      progress: Joi.number()
     },
     params: {
       reportId: Joi.string().hex().required()

@@ -11,12 +11,10 @@ easae/seoa11y-db:
     - nvm install 6
     - nvm use 6
     - npm install
-    - mv .env.example .env
     - npm run build
 
   PkgInclude:
     - 'dist/'
-    - '.env'
 
   Start:
     - sudo npm install -g pm2

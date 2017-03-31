@@ -39,6 +39,7 @@ function create(req, res, next) {
     selector: req.body.selector,
     type: req.body.type,
     typeCode: req.body.typeCode,
+    reportId: req.body.reportId,
     url: req.body.url
   });
 
