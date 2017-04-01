@@ -98,8 +98,8 @@ IssueSchema.statics = {
       .sort({ createdAt: -1 })
       .byCode(code)
       .byReport(reportId)
-      .skip(skip)
-      .limit(limit)
+      .skip(+skip)
+      .limit(+limit)
       .exec();
   }
 

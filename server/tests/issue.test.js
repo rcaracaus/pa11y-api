@@ -19,7 +19,7 @@ after((done) => {
 
 describe('## Issue APIs', () => {
   let issue = {
-    code: 'WCAG2AA.Principle2.Guideline2_4.2_4_2.H25.2',
+    code: 'test',
     context: '<title>WordPress.com: Create a free we...</title>',
     message: 'Check that the title element describes the document.',
     selector: 'html > head > title',
@@ -28,6 +28,7 @@ describe('## Issue APIs', () => {
     reportId: '1234hex1234',
     url: 'url'
   };
+  let issue2;
 
   describe('# POST /api/issues', () => {
     it('should create a new issue', (done) => {
@@ -45,6 +46,49 @@ describe('## Issue APIs', () => {
           expect(res.body.reportId).to.equal(issue.reportId);
           expect(res.body.url).to.equal(issue.url);
           issue = res.body;
+          done();
+        })
+        .catch(done);
+    });
+  });
+
+  describe('# GET /api/issues', () => {
+    it('should get issue listing', (done) => {
+      // newly installed versions may have a new DB
+      // we need to post an issue first to see a list (more than one)
+      issue2 = issue;
+      request(app)
+        .post('/api/issues')
+        .send(issue2)
+        .then((res) => {
+          issue2 = res.body;
+          request(app)
+            .get('/api/issues')
+            .expect(httpStatus.OK);
+        })
+        .catch(done);
+      done();
+    });
+
+    it('should respect limit and query parameter', (done) => {
+      request(app)
+        .get('/api/issues')
+        .query({ limit: 1, skip: 1 })
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body.length).to.equal(1);
+          expect(res.body[0]._id).to.equal(issue._id);
+          done();
+        })
+        .catch(done);
+    });
+
+    it('should report error with message - Not found, when issue does not exists', (done) => {
+      request(app)
+        .get('/api/issues/56c787ccc67fc16ccc1a5e92')
+        .expect(httpStatus.NOT_FOUND)
+        .then((res) => {
+          expect(res.body.message).to.equal('Not Found');
           done();
         })
         .catch(done);
@@ -121,7 +165,12 @@ describe('## Issue APIs', () => {
           expect(res.body.context).to.equal(issue.context);
           done();
         })
-        .catch(done);
+        // delete issue2
+        .then(() => request(app)
+          .delete(`/api/issues/${issue2._id}`)
+          .expect(httpStatus.OK)
+          .catch(done)
+        );
     });
   });
 });
