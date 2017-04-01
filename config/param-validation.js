@@ -51,6 +51,13 @@ export default {
     }
   },
 
+  // GET /api/urls
+  listUrls: {
+    query: {
+      reportId: Joi.string().hex().required()
+    }
+  },
+
   // POST /api/auth/login
   login: {
     body: {

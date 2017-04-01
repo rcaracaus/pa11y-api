@@ -101,6 +101,27 @@ IssueSchema.statics = {
       .skip(+skip)
       .limit(+limit)
       .exec();
+  },
+
+  /**
+   * List urls which have a specific code.
+   * @param {number} skip - Number of issues to be skipped.
+   * @param {number} limit - Limit number of issues to be returned.
+   * @returns {Promise<Issue[]>}
+   */
+  listUrls({ code = '', reportId = '' } = {}) {
+    const response = { urls: [] };
+
+    return this.find()
+      .byCode(code)
+      .byReport(reportId)
+      .exec()
+      .then((issues) => {
+        issues.forEach((issue) => {
+          if (response.urls.indexOf(issue.url) === -1) response.urls.push(issue.url);
+        });
+        return response;
+      });
   }
 
 };
