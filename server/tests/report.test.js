@@ -19,8 +19,9 @@ after((done) => {
 
 describe('## Report APIs', () => {
   let report = {
+    rootUrl: 'http://www.google.com',
     urls: ['http://www.google.com', 'http://www.google.com'],
-    standard: 'WCAGAA',
+    standard: 'WCAGAA'
   };
 
   describe('# POST /api/reports', () => {
@@ -45,6 +46,7 @@ describe('## Report APIs', () => {
         .get(`/api/reports/${report._id}`)
         .expect(httpStatus.OK)
         .then((res) => {
+          expect(res.body.rootUrl).to.equal(report.rootUrl);
           expect(res.body.urls).to.deep.equal(report.urls);
           expect(res.body.standard).to.equal(report.standard);
           done();
@@ -72,6 +74,7 @@ describe('## Report APIs', () => {
         .send(report)
         .expect(httpStatus.OK)
         .then((res) => {
+          expect(res.body.rootUrl).to.equal(report.rootUrl);
           expect(res.body.standard).to.equal('KK');
           expect(res.body.urls).to.deep.equal(report.urls);
           done();
@@ -99,6 +102,7 @@ describe('## Report APIs', () => {
         .delete(`/api/reports/${report._id}`)
         .expect(httpStatus.OK)
         .then((res) => {
+          expect(res.body.rootUrl).to.equal(report.rootUrl);
           expect(res.body.standard).to.equal('KK');
           expect(res.body.urls).to.deep.equal(report.urls);
           done();

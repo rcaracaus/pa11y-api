@@ -34,8 +34,9 @@ export default {
   // POST /api/reports
   createReport: {
     body: {
-      urls: Joi.array().items(Joi.string()),
-      standard: Joi.string().required()
+      rootUrl: Joi.string().required(),
+      standard: Joi.string().required(),
+      urls: Joi.array().items(Joi.string())
     }
   },
 
@@ -51,10 +52,15 @@ export default {
     }
   },
 
-  // GET /api/urls
-  listUrls: {
-    query: {
-      reportId: Joi.string().hex().required()
+  // POST /api/reports
+  createUrl: {
+    body: {
+      reportId: Joi.string().hex().required(),
+      url: Joi.string().required(),
+      codes: Joi.array().items(Joi.string()).required(),
+      nErrors: Joi.number().required(),
+      nWarnings: Joi.number().required(),
+      nNotices: Joi.number().required()
     }
   },
 

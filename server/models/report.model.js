@@ -7,6 +7,10 @@ import APIError from '../helpers/APIError';
  * Report Schema
  */
 const ReportSchema = new mongoose.Schema({
+  rootUrl: {
+    type: String,
+    required: true
+  },
   progress: {
     type: Number,
     default: 0
@@ -35,6 +39,10 @@ const ReportSchema = new mongoose.Schema({
 ReportSchema.method({
 });
 
+ReportSchema.query.byProgress = function byProgress(progress) {
+  return this.find({ progress: { $gte: progress } });
+};
+
 /**
  * Statics
  */
@@ -62,9 +70,10 @@ ReportSchema.statics = {
    * @param {number} limit - Limit number of reports to be returned.
    * @returns {Promise<Report[]>}
    */
-  list({ skip = 0, limit = 50 } = {}) {
+  list({ skip = 0, limit = 50, progress = 0 } = {}) {
     return this.find()
       .sort({ createdAt: -1 })
+      .byProgress(progress)
       .skip(skip)
       .limit(limit)
       .exec();

@@ -4,96 +4,78 @@ import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
 
 /**
- * Issue Schema
+ * Url Schema
  */
-const IssueSchema = new mongoose.Schema({
-  code: {
+const UrlSchema = new mongoose.Schema({
+  reportId: {
     type: String,
-    required: true
-  },
-  context: {
-    type: String,
-    required: true
-  },
-  message: {
-    type: String,
-    required: true
-  },
-  selector: {
-    type: String,
-    required: true
-  },
-  type: {
-    type: String,
-    required: true
-  },
-  typeCode: {
-    type: Number,
     required: true
   },
   url: {
     type: String,
     required: true
   },
-  reportId: {
-    type: String,
+  codes: {
+    type: [String],
     required: true
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  nErrors: {
+    type: Number,
+    required: true
+  },
+  nWarnings: {
+    type: Number,
+    required: true
+  },
+  nNotices: {
+    type: Number,
+    required: true
   }
 });
 
 /**
- * Add your
- * - pre-save hooks
- * - validations
- * - virtuals
+ * Methods
  */
+UrlSchema.method({
+});
 
-IssueSchema.query.byCode = function byCode(code) {
+UrlSchema.query.byCode = function byCode(code) {
   return this.find({ code: new RegExp(code, 'i') });
 };
 
-IssueSchema.query.byReport = function byReport(reportId) {
+UrlSchema.query.byReport = function byReport(reportId) {
   return this.find({ reportId: new RegExp(reportId, 'i') });
 };
 
 /**
- * Methods
- */
-IssueSchema.method({
-});
-
-/**
  * Statics
  */
-IssueSchema.statics = {
+UrlSchema.statics = {
+
   /**
-   * Get Issue
+   * Get Url
    * @param {ObjectId} id - The objectId of issue.
-   * @returns {Promise<Issue, APIError>}
+   * @returns {Promise<Url, APIError>}
    */
   get(id) {
     return this.findById(id)
       .exec()
-      .then((issue) => {
-        if (issue) {
-          return issue;
+      .then((url) => {
+        if (url) {
+          return url;
         }
-        const err = new APIError('No such issue exists!', httpStatus.NOT_FOUND);
+        const err = new APIError('No such url exists!', httpStatus.NOT_FOUND);
         return Promise.reject(err);
       });
   },
 
   /**
-   * List issues in descending order of 'createdAt' timestamp.
+   * List urls which have a specific code.
    * @param {number} skip - Number of issues to be skipped.
    * @param {number} limit - Limit number of issues to be returned.
    * @returns {Promise<Issue[]>}
    */
-  list({ skip = 0, limit = 50, code = '', reportId = '' } = {}) {
+  list({ limit = 50, skip = 0, reportId = '', code = '' } = {}) {
     return this.find()
       .sort({ createdAt: -1 })
       .byCode(code)
@@ -106,6 +88,6 @@ IssueSchema.statics = {
 };
 
 /**
- * @typedef Issue
+ * @typedef Url
  */
-export default mongoose.model('Issue', IssueSchema);
+export default mongoose.model('Url', UrlSchema);

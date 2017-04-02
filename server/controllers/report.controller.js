@@ -28,6 +28,7 @@ function get(req, res) {
  */
 function create(req, res, next) {
   const report = new Report({
+    rootUrl: req.body.rootUrl,
     standard: req.body.standard,
     urls: req.body.urls
   });
@@ -61,8 +62,8 @@ function update(req, res, next) {
  * @returns {Report[]}
  */
 function list(req, res, next) {
-  const { limit = 50, skip = 0 } = req.query;
-  Report.list({ limit, skip })
+  const { limit = 50, skip = 0, progress = 0 } = req.query;
+  Report.list({ limit, skip, progress })
     .then(reports => res.json(reports))
     .catch(e => next(e));
 }
