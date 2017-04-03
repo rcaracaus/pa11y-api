@@ -74,8 +74,8 @@ ReportSchema.statics = {
     return this.find()
       .sort({ createdAt: -1 })
       .byProgress(progress)
-      .skip(skip)
-      .limit(limit)
+      .skip(+skip)
+      .limit(+limit)
       .exec();
   }
 };
