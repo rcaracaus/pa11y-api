@@ -60,6 +60,24 @@ describe('## Urls APIs', () => {
     });
   });
 
+  describe('# GET /api/urls/:urlId', () => {
+    it('should get url details', (done) => {
+      request(app)
+        .get(`/api/urls/${url._id}`)
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body.reportId).to.equal(url.reportId);
+          expect(res.body.url).to.equal(url.url);
+          expect(res.body.codes).to.deep.equal(url.codes);
+          expect(res.body.nErrors).to.equal(url.nErrors);
+          expect(res.body.nWarnings).to.equal(url.nWarnings);
+          expect(res.body.nNotices).to.equal(url.nNotices);
+          done();
+        })
+        .catch(done);
+    });
+  });
+
   describe('# DELETE /api/urls/:urlId', () => {
     it('should delete a url', (done) => {
       request(app)
