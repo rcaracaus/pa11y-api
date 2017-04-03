@@ -7,7 +7,7 @@ import app from '../../index';
 chai.config.includeStack = true;
 
 
-let issuesData = [
+const issuesData = [
   {
     code: 'imageMissingAlt',
     context: '<img src="/asdf.jgp" />',
@@ -40,7 +40,7 @@ let issuesData = [
   }
 ];
 
-let lastIssue = issuesData.slice(-1)[0];
+let lastIssue = issuesData[issuesData.length - 1];
 
 after((done) => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
@@ -51,9 +51,7 @@ after((done) => {
 });
 
 describe('## Issue APIs', () => {
-
   describe('# POST /api/issues', () => {
-
     it('should have test data', (done) => {
       for (let i = 0; i < issuesData.length - 1; i++) {
         request(app)
@@ -87,7 +85,6 @@ describe('## Issue APIs', () => {
   });
 
   describe('# GET /api/issues', () => {
-
     it('should get issue listing', (done) => {
       request(app)
         .get('/api/issues')
@@ -202,12 +199,11 @@ describe('## Issue APIs', () => {
     it('should delete issue', (done) => {
       // Delete all test data.
       for (let i = 0; i < issuesData.length - 1; i++) {
-        let issue = issuesData[i];
+        const issue = issuesData[i];
         request(app)
-          .delete(`/api/issues/${lastIssue._id}`);
+          .delete(`/api/issues/${issue._id}`);
       }
-      // Test final deletion.
-      let issue = issuesData[issuesData.length];
+      // Test final deletion
       request(app)
         .delete(`/api/issues/${lastIssue._id}`)
         .expect(httpStatus.OK)
