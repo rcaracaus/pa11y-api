@@ -21,7 +21,8 @@ describe('## Report APIs', () => {
   let report = {
     rootUrl: 'http://www.google.com',
     urls: ['http://www.google.com', 'http://www.google.com'],
-    standard: 'WCAGAA'
+    standard: 'WCAGAA',
+    progress: 0
   };
 
   describe('# POST /api/reports', () => {
@@ -31,8 +32,10 @@ describe('## Report APIs', () => {
         .send(report)
         .expect(httpStatus.OK)
         .then((res) => {
+          expect(res.body.rootUrl).to.equal(report.rootUrl);
           expect(res.body.urls).to.deep.equal(report.urls);
           expect(res.body.standard).to.equal(report.standard);
+          expect(res.body.progress).to.equal(report.progress);
           report = res.body;
           done();
         })
@@ -49,6 +52,7 @@ describe('## Report APIs', () => {
           expect(res.body.rootUrl).to.equal(report.rootUrl);
           expect(res.body.urls).to.deep.equal(report.urls);
           expect(res.body.standard).to.equal(report.standard);
+          expect(res.body.progress).to.equal(report.progress);
           done();
         })
         .catch(done);
@@ -75,8 +79,9 @@ describe('## Report APIs', () => {
         .expect(httpStatus.OK)
         .then((res) => {
           expect(res.body.rootUrl).to.equal(report.rootUrl);
-          expect(res.body.standard).to.equal('KK');
           expect(res.body.urls).to.deep.equal(report.urls);
+          expect(res.body.standard).to.equal('KK');
+          expect(res.body.progress).to.equal(report.progress);
           done();
         })
         .catch(done);
@@ -103,8 +108,9 @@ describe('## Report APIs', () => {
         .expect(httpStatus.OK)
         .then((res) => {
           expect(res.body.rootUrl).to.equal(report.rootUrl);
-          expect(res.body.standard).to.equal('KK');
           expect(res.body.urls).to.deep.equal(report.urls);
+          expect(res.body.standard).to.equal('KK');
+          expect(res.body.progress).to.equal(report.progress);
           done();
         })
         .catch(done);
