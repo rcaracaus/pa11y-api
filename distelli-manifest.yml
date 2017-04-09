@@ -28,4 +28,4 @@ easae/seoa11y-api:
     - sudo npm install -g pm2
     - sudo pm2 stop all || true
     - sudo pm2 delete all || true
-    - sudo pm2 start dist/index.js
+    - sudo NODE_ENV=$NODE_ENV PORT=$PORT JWT_SECRET=$JWT_SECRET MONGO_HOST=$MONGO_HOST MONGO_PORT=$MONGO_PORT MONGO_DB=$MONGO_DB pm2 start dist/index.js
