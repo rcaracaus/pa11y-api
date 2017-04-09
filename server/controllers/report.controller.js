@@ -28,6 +28,7 @@ function get(req, res) {
  */
 function create(req, res, next) {
   const report = new Report({
+    rootUrl: req.body.rootUrl,
     standard: req.body.standard,
     urls: req.body.urls
   });

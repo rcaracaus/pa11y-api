@@ -7,6 +7,10 @@ import APIError from '../helpers/APIError';
  * Report Schema
  */
 const ReportSchema = new mongoose.Schema({
+  rootUrl: {
+    type: String,
+    required: true
+  },
   progress: {
     type: Number,
     default: 0
@@ -65,8 +69,8 @@ ReportSchema.statics = {
   list({ skip = 0, limit = 50 } = {}) {
     return this.find()
       .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit)
+      .skip(+skip)
+      .limit(+limit)
       .exec();
   }
 };
