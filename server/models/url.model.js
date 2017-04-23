@@ -40,7 +40,7 @@ UrlSchema.method({
 });
 
 UrlSchema.query.byCode = function byCode(code) {
-  return this.find({ code: new RegExp(code, 'i') });
+  return this.find({ codes: new RegExp(code, 'i') });
 };
 
 UrlSchema.query.byReport = function byReport(reportId) {
