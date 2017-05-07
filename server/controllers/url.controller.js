@@ -53,9 +53,10 @@ function create(req, res, next) {
  * @returns {Issue[]}
  */
 function list(req, res, next) {
-  const { limit = 50, skip = 0, reportId = '', code = '' } = req.query;
+  const { limit = 50, skip = 0, reportId = '', code = '', url = '' } = req.query;
+  const decodedURL = decodeURIComponent(url); // decode the url
 
-  Url.list({ limit, skip, reportId, code })
+  Url.list({ limit, skip, reportId, code, decodedURL })
     .then(urls => res.json(urls))
     .catch(e => next(e));
 }

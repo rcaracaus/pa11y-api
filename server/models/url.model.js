@@ -39,6 +39,10 @@ const UrlSchema = new mongoose.Schema({
 UrlSchema.method({
 });
 
+UrlSchema.query.byUrl = function byUrl(url) {
+  return this.find({ url: new RegExp(url, 'i') });
+};
+
 UrlSchema.query.byCode = function byCode(code) {
   return this.find({ codes: new RegExp(code, 'i') });
 };
@@ -75,11 +79,12 @@ UrlSchema.statics = {
    * @param {number} limit - Limit number of issues to be returned.
    * @returns {Promise<Issue[]>}
    */
-  list({ limit = 50, skip = 0, reportId = '', code = '' } = {}) {
+  list({ limit = 50, skip = 0, reportId = '', code = '', url = '' } = {}) {
     return this.find()
       .sort({ createdAt: -1 })
-      .byCode(code)
+      .byUrl(url)
       .byReport(reportId)
+      .byCode(code)
       .skip(+skip)
       .limit(+limit)
       .exec();
