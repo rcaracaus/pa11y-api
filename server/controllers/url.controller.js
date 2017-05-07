@@ -56,7 +56,7 @@ function list(req, res, next) {
   const { limit = 50, skip = 0, reportId = '', code = '', url = '' } = req.query;
   const decodedURL = decodeURIComponent(url); // decode the url
 
-  Url.list({ limit, skip, reportId, code, decodedURL })
+  Url.list({ limit, skip, reportId, code, url: decodedURL })
     .then(urls => res.json(urls))
     .catch(e => next(e));
 }
