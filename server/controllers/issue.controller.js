@@ -81,8 +81,10 @@ function update(req, res, next) {
  * @returns {Issue[]}
  */
 function list(req, res, next) {
-  const { limit = 50, skip = 0, code = '', reportId = '' } = req.query;
-  Issue.list({ limit, skip, code, reportId })
+  const { limit = 50, skip = 0, code = '', reportId = '', url = '' } = req.query;
+  const decodedURL = decodeURIComponent(url); // decode the url
+
+  Issue.list({ limit, skip, code, reportId, url: decodedURL })
     .then(issues => res.json(issues))
     .catch(e => next(e));
 }
