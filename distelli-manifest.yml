@@ -11,9 +11,9 @@ easae/seoa11y-api:
     - MONGO_DB: pa11yapi
 
   PreBuild:
-    - sudo add-apt-repository ppa:jonathonf/python-3.6
+    - sudo add-apt-repository ppa:fkrull/deadsnakes
     - sudo apt-get -y update
-    - sudo apt-get -y install build-essential libssl-dev curl python3.6
+    - sudo apt-get -y install build-essential libssl-dev curl python2.7
     - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
   Build:
     - nvm install 6
