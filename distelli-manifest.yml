@@ -14,14 +14,18 @@ easae/seoa11y-api:
     - sudo apt-get install python-software-properties
     - sudo add-apt-repository ppa:ubuntu-toolchain-r/test
     - sudo apt-get -y update
-    - sudo apt-get -y install gcc-5.1 g++-5.1 build-essential libssl-dev curl
-    - sudo rm /usr/bin/g++
-    - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
+    - sudo apt-get -y install g++-4.8 gcc-4.8 build-essential libssl-dev curl
+    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
+    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
+    - sudo update-alternatives --set g++ /usr/bin/g++-4.8
+    - sudo update-alternatives --set gcc /usr/bin/gcc-4.8
     - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
   Build:
     - nvm install 6.5
     - nvm use 6.5
     - n=$(which node);n=${n%/bin/node};chmod -R 755 $n/bin/*;sudo cp -r $n/{bin,lib,share} /usr/local
+    - gcc -v
+    - g++ -v
     - sudo npm install
     - npm run build
 
