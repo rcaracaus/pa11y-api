@@ -20,7 +20,7 @@ easae/seoa11y-api:
   Build:
     - nvm install 6.5
     - nvm use 6.5
-    - npm install
+    - sudo npm install
     - npm run build
 
   PkgInclude:
