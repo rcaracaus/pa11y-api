@@ -10,14 +10,22 @@ easae/seoa11y-api:
     - MONGO_PORT: 27017
     - MONGO_DB: pa11yapi
 
+  PreBuild:
+    - sudo add-apt-repository ppa:jonathonf/python-3.6
+    - sudo apt-get -y update
+    - sudo apt-get -y install build-essential libssl-dev curl python3.6
+    - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
+  Build:
+    - nvm install 6
+    - nvm use 6
+    - npm install
+    - npm run build
+
   PkgInclude:
-    - '*'
+    - 'dist/'
+    - 'node_modules/'
 
   Start:
-    - sudo apt-get update
-    - sudo apt-get install build-essential -y
-    - NODE_ENV=development sudo npm install
-    - sudo npm run build
     - sudo npm install -g pm2
     - sudo pm2 stop all || true
     - sudo pm2 delete all || true
