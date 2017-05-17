@@ -1,7 +1,7 @@
 easae/seoa11y-api:
   # Distelli Manifest example
   # this example assumes the build and deploy servers are:
-  # Ubuntu 14.04
+  # Ubuntu 12.04
   Env:
     - NODE_ENV: development
     - PORT: 3000
@@ -11,9 +11,11 @@ easae/seoa11y-api:
     - MONGO_DB: pa11yapi
 
   PreBuild:
-    - lsb_release -a
+    - sudo apt-get install python-software-properties
+    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test
     - sudo apt-get -y update
-    - sudo apt-get -y install build-essential libssl-dev curl
+    - sudo apt-get -y install gcc-4.8 build-essential libssl-dev curl
+    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
     - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
   Build:
     - nvm install 6.5
