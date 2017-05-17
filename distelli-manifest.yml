@@ -18,6 +18,7 @@ easae/seoa11y-api:
   Build:
     - nvm install 6.5
     - nvm use 6.5
+    - npm i -g node-gyp && node-gyp clean
     - npm install bcrypt
     - npm install
     - npm run build
