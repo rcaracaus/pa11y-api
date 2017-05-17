@@ -64,11 +64,32 @@ export default {
     }
   },
 
-  // POST /api/auth/login
+  // POST /api/user
+  createUser: {
+    body: {
+      email: Joi.string().email(),
+      name: Joi.object({
+        first: Joi.string().regex(/^[A-Z]+$/i).required(),
+        last: Joi.string().regex(/^[A-Z]+$/i).required()
+      }).required(),
+      // allow alphanum /$_.-!@#
+      password: Joi.string().regex(/^[A-Z0-9/$_.\-!@#]+$/i).required()
+    }
+  },
+
+  // DELETE /api/user
+  removeUser: {
+    params: {
+      userId: Joi.string().hex().required()
+    }
+  },
+
+  // POST /api/user/login
   login: {
     body: {
-      username: Joi.string().required(),
-      password: Joi.string().required()
+      email: Joi.string().email().required(),
+      // allow alphanum /$_.-!@#
+      password: Joi.string().regex(/^[A-Z0-9/$_.\-!@#]+$/i).required()
     }
   }
 };

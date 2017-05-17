@@ -2,7 +2,7 @@ import express from 'express';
 import issueRoutes from './issue.route';
 import reportRoutes from './report.route';
 import urlRoutes from './url.route';
-import authRoutes from './auth.route';
+import userRoutes from './user.route';
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -20,7 +20,7 @@ router.use('/reports', reportRoutes);
 // mount urls routes at /issues
 router.use('/urls', urlRoutes);
 
-// mount auth routes at /auth
-router.use('/auth', authRoutes);
+// mount user routes at /user
+router.use('/user', userRoutes);
 
 export default router;
