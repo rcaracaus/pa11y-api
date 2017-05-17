@@ -21,6 +21,8 @@ easae/seoa11y-api:
     - nvm install 6.5
     - nvm use 6.5
     - n=$(which node);n=${n%/bin/node};chmod -R 755 $n/bin/*;sudo cp -r $n/{bin,lib,share} /usr/local
+    - g++ -v
+    - gcc -v
     - sudo npm install
     - npm run build
 
