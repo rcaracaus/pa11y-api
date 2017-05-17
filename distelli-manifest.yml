@@ -20,7 +20,6 @@ easae/seoa11y-api:
   Build:
     - nvm install 6.5
     - nvm use 6.5
-    - node-gyp rebuild
     - npm install
     - npm run build
 
