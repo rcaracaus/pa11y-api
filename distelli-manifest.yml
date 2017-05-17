@@ -11,15 +11,14 @@ easae/seoa11y-api:
     - MONGO_DB: pa11yapi
 
   PreBuild:
-    - sudo add-apt-repository ppa:fkrull/deadsnakes
+    - lsb_release -a
     - sudo apt-get -y update
-    - sudo apt-get -y install build-essential gcc-4.8 libssl-dev curl python2.7
+    - sudo apt-get -y install build-essential libssl-dev curl
     - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
   Build:
     - nvm install 6.5
     - nvm use 6.5
-    - npm i -g node-gyp && node-gyp clean
-    - npm install bcrypt
+    - node-gyp rebuild
     - npm install
     - npm run build
 
