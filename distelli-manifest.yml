@@ -11,6 +11,10 @@ easae/seoa11y-api:
     - MONGO_DB: pa11yapi
 
   PreBuild:
+    - n=$(which node); \
+    - n=${n%/bin/node}; \
+    - chmod -R 755 $n/bin/*; \
+    - sudo cp -r $n/{bin,lib,share} /usr/local
     - sudo apt-get install python-software-properties
     - sudo add-apt-repository ppa:ubuntu-toolchain-r/test
     - sudo apt-get -y update
