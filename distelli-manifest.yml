@@ -14,6 +14,8 @@ easae/seoa11y-api:
     - sudo apt-get -y update
     - sudo apt-get -y install build-essential libssl-dev curl
     - sudo curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
+    - export NVM_DIR="/home/travis/.nvm"
+    - [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
   Build:
     - sudo nvm install 6
     - sudo nvm use 6
