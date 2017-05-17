@@ -11,18 +11,16 @@ easae/seoa11y-api:
     - MONGO_DB: pa11yapi
 
   PreBuild:
-    - sudo apt-get install python-software-properties
     - sudo add-apt-repository ppa:ubuntu-toolchain-r/test
     - sudo apt-get -y update
-    - sudo apt-get -y install gcc-4.8 build-essential libssl-dev curl
-    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
+    - sudo apt-get -y install gcc-5.1 g++-5.1 build-essential libssl-dev curl
+    - sudo rm /bin/usr/g++
+    - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
     - curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash
   Build:
     - nvm install 6.5
     - nvm use 6.5
     - n=$(which node);n=${n%/bin/node};chmod -R 755 $n/bin/*;sudo cp -r $n/{bin,lib,share} /usr/local
-    - g++ -v
-    - gcc -v
     - sudo npm install
     - npm run build
 
