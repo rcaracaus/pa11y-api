@@ -31,15 +31,15 @@ function create(req, res, next) {
     });
 
     user.save()
-      .then(savedUser => res.json({
-        _id: savedUser._id,
-        email: savedUser.email,
-        name: {
-          first: savedUser.name.first,
-          last: savedUser.name.last
-        }
-      }))
-      .catch(e => next(e));
+    .then(savedUser => res.json({
+      _id: savedUser._id,
+      email: savedUser.email,
+      name: {
+        first: savedUser.name.first,
+        last: savedUser.name.last
+      }
+    }))
+    .catch(e => next(e));
   });
 }
 
@@ -78,7 +78,8 @@ function login(req, res, next) {
       const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED, true);
       return next(err);
     });
-  });
+  })
+  .catch(err => next(err));
 }
 
 function remove(req, res, next) {
