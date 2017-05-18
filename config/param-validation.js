@@ -68,12 +68,12 @@ export default {
   createUser: {
     body: {
       email: Joi.string().email(),
-      name: Joi.object({
+      name: Joi.object().keys({
         first: Joi.string().regex(/^[A-Z]+$/i).required(),
         last: Joi.string().regex(/^[A-Z]+$/i).required()
-      }).required(),
+      }).unknown(false).required(),
       // allow alphanum /$_.-!@#
-      password: Joi.string().regex(/^[A-Z0-9/$_.\-!@#]+$/i).required()
+      password: Joi.string().regex(/^[A-Z0-9/$_.\-!@#]{8,30}$/i).required()
     }
   },
 
@@ -89,7 +89,7 @@ export default {
     body: {
       email: Joi.string().email().required(),
       // allow alphanum /$_.-!@#
-      password: Joi.string().regex(/^[A-Z0-9/$_.\-!@#]+$/i).required()
+      password: Joi.string().regex(/^[A-Z0-9/$_.\-!@#]{8,30}$/i).required()
     }
   }
 };
