@@ -1,12 +1,21 @@
 import express from 'express';
 import validate from 'express-validation';
 import expressJwt from 'express-jwt';
+import RateLimit from 'express-rate-limit';
 import paramValidation from '../../config/param-validation';
 import userCtrl from '../controllers/user.controller';
 import config from '../../config/config';
 
 const router = express.Router(); // eslint-disable-line new-cap
 
+if (process.env.NODE_ENV !== 'test') {
+  // rate limit the /user endpoint
+  router.use(new RateLimit({
+    windowMs: 60 * 1000, // every minute
+    max: 3,
+    delayMs: 0, // disabled
+  }));
+}
 
 router.route('/')
   /** POST /api/user - Creates a new user, returns a newly created user */
