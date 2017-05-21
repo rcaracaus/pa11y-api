@@ -36,7 +36,8 @@ export default {
     body: {
       rootUrl: Joi.string().required(),
       standard: Joi.string().required(),
-      urls: Joi.array().items(Joi.string())
+      urls: Joi.array().items(Joi.string()),
+      codes: Joi.array().items(Joi.string())
     }
   },
 
@@ -45,7 +46,8 @@ export default {
     body: {
       urls: Joi.array().items(Joi.string()),
       standard: Joi.string(),
-      progress: Joi.number()
+      progress: Joi.number(),
+      codes: Joi.array().items(Joi.string())
     },
     params: {
       reportId: Joi.string().hex().required()
