@@ -30,8 +30,16 @@ function create(req, res, next) {
       password: passwordHash
     });
 
+    const token = jwt.sign({
+      email: req.body.email
+    },
+    config.jwtSecret, {
+      expiresIn: '24h'
+    });
+
     user.save()
     .then(savedUser => res.json({
+      token,
       _id: savedUser._id,
       email: savedUser.email,
       name: {
