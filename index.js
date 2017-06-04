@@ -5,6 +5,11 @@ import util from 'util';
 import config from './config/config';
 import app from './config/express';
 
+// import express-session and the MongoStore to store session data
+import session from 'express-session';
+import connectMongo from 'connect-mongo';
+const MongoStore = connectMongo(session);
+
 const debug = require('debug')('pa11y-api:index');
 
 // make bluebird default Promise
@@ -19,6 +24,14 @@ mongoose.connect(mongoUri, { server: { socketOptions: { keepAlive: 1 } } });
 mongoose.connection.on('error', () => {
   throw new Error(`unable to connect to database: ${mongoUri}`);
 });
+
+app.use(session({
+  secret: config.jwtSecret,
+  resave: false,
+  saveUnitialized: true,
+  cookie: { secure: true, httpOnly: false, maxAge: 86400 },
+  store: new MongoStore({ mongooseConnection: mongoose.connection })
+}))
 
 // print mongoose logs in dev env
 if (config.MONGOOSE_DEBUG) {

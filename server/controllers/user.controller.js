@@ -19,99 +19,94 @@ function load(req, res, next, id) {
     .catch(e => next(e));
 }
 
+/**
+ * Creates a new user
+ *
+ * @param  req
+ * @param  res
+ * @param  {Function} next
+ * @return {*}
+ */
 function create(req, res, next) {
-  bcrypt.hash(req.body.password, SALT_ROUNDS).then((passwordHash) => {
-    const user = new User({
+  bcrypt.hash(req.body.password, SALT_ROUNDS)
+  .then(passwordHash => {
+    return new User({
       email: req.body.email,
-      name: {
-        first: req.body.name.first,
-        last: req.body.name.last
-      },
+      name: req.body.name,
       password: passwordHash
     });
-
-    const token = jwt.sign({
-      email: req.body.email
-    },
-    config.jwtSecret, {
-      expiresIn: '24h'
-    });
-
-    user.save()
-    .then(savedUser => res.json({
-      token,
-      _id: savedUser._id,
-      email: savedUser.email,
-      name: {
-        first: savedUser.name.first,
-        last: savedUser.name.last
-      }
-    }))
-    .catch(e => next(e));
-  });
+  })
+  .catch(e => next(e))
+  .then(user => user.save())
+  .catch(e => next(e))
+  .then(user => {
+    req.session.user = user._id;
+    return res.json({
+      authentication: 'login',
+      email: user.email,
+      name: user.name
+    })
+  })
+  .catch(e => next(e));
 }
 
 /**
- * Returns jwt token if valid username and password is provided
+ * Logs a user in or returns the account associated with their session cookie
+ *
  * @param req
  * @param res
  * @param next
  * @returns {*}
  */
 function login(req, res, next) {
-  // Ideally you'll fetch this from the db
-  // Idea here was to show how jwt works with simplicity
-
-  User.getByEmail(req.body.email)
-  .then((user) => {
-    bcrypt.compare(req.body.password, user.password)
-    .then((passwordCorrect) => {
-      if (passwordCorrect) {
-        const token = jwt.sign({
-          email: user.email
-        },
-        config.jwtSecret, {
-          expiresIn: '24h'
-        });
+  if (req.session) {
+    if (req.session.user) {
+      return User.get(req.session.user)
+      .then(user => {
         return res.json({
-          token,
-          _id: user._id,
+          authentication: 'session',
           email: user.email,
-          name: {
-            first: user.name.first,
-            last: user.name.last
-          }
+          name: user.name
+        })
+      })
+      .catch(() => next(new APIError('Authentication error', httpStatus.UNAUTHORIZED, true)));
+    }
+  }
+
+  return User.getByEmail(req.body.email)
+  .then(user => {
+    return bcrypt.compare(req.body.password, user.password)
+    .then(passwordCorrect => {
+      console.log(user, passwordCorrect);
+      if (passwordCorrect) {
+        req.session.user = user._id; // set user id in database session
+        return res.json({
+          authentication: 'login',
+          email: user.email,
+          name: user.name
         });
       }
-      const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED, true);
-      return next(err);
+      else throw Error();
     });
   })
-  .catch(err => next(err));
-}
-
-function remove(req, res, next) {
-  const user = req.user;
-  user.remove()
-    .then(deletedUser => res.json({
-      email: deletedUser.email,
-      name: deletedUser.name
-    }))
-    .catch(e => next(e));
+  .catch(() => next(new APIError('Authentication error', httpStatus.UNAUTHORIZED, true)));
 }
 
 /**
- * This is a protected route. Will return random number only if jwt token is provided in header.
- * @param req
- * @param res
- * @returns {*}
+ * Removes a user
+ *
+ * @param  req
+ * @param  res
+ * @param  {Function} next
+ * @return {*}
  */
-function getRandomNumber(req, res) {
-  // req.user is assigned by jwt middleware if valid token is provided
-  return res.json({
-    user: req.user,
-    num: Math.random() * 100
-  });
+function remove(req, res, next) {
+  if (req.body.secret !== config.jwtSecret)
+    return next(new APIError('Authentication error', httpStatus.UNAUTHORIZED, true));
+
+  req.user.remove()
+    .then(() => res.json({ message: 'User deleted' }))
+    .catch(e => next(e));
 }
 
-export default { load, create, remove, login, getRandomNumber };
+export default { load, create, login, remove };

@@ -50,7 +50,7 @@ describe('## User APIs', () => {
         .catch(done);
     });
 
-    it('should get valid JWT token', (done) => {
+    it('should get valid session cookie', (done) => {
       request(app)
         .post('/api/user/login')
         .send(testUser)
@@ -74,46 +74,7 @@ describe('## User APIs', () => {
         .delete(`/api/user/${testUser._id}`)
         .expect(httpStatus.OK)
         .then((res) => {
-          expect(res.body.email).to.equal(testUser.email);
-          expect(res.body.name).to.deep.equal(testUser.name);
-          // TODO: expect
-          done();
-        })
-        .catch(done);
-    });
-  });
-
-  describe('# GET /api/user/random-number', () => {
-    it('should fail to get random number because of missing Authorization', (done) => {
-      request(app)
-        .get('/api/user/random-number')
-        .expect(httpStatus.UNAUTHORIZED)
-        .then((res) => {
-          expect(res.body.message).to.equal('Unauthorized');
-          done();
-        })
-        .catch(done);
-    });
-
-    it('should fail to get random number because of wrong token', (done) => {
-      request(app)
-        .get('/api/user/random-number')
-        .set('Authorization', 'Bearer inValidToken')
-        .expect(httpStatus.UNAUTHORIZED)
-        .then((res) => {
-          expect(res.body.message).to.equal('Unauthorized');
-          done();
-        })
-        .catch(done);
-    });
-
-    it('should get a random number', (done) => {
-      request(app)
-        .get('/api/user/random-number')
-        .set('Authorization', jwtToken)
-        .expect(httpStatus.OK)
-        .then((res) => {
-          expect(res.body.num).to.be.a('number');
+          expect(res.body.message).to.equal('User deleted');
           done();
         })
         .catch(done);
