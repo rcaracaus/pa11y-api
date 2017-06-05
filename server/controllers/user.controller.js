@@ -1,8 +1,6 @@
-import jwt from 'jsonwebtoken';
 import httpStatus from 'http-status';
 import bcrypt from 'bcrypt';
 import APIError from '../helpers/APIError';
-import config from '../../config/config';
 import User from '../models/user.model';
 
 const SALT_ROUNDS = 9;
@@ -19,99 +17,71 @@ function load(req, res, next, id) {
     .catch(e => next(e));
 }
 
+/**
+ * Creates a new user
+ *
+ * @param  req
+ * @param  res
+ * @param  {Function} next
+ * @return {*}
+ */
 function create(req, res, next) {
-  bcrypt.hash(req.body.password, SALT_ROUNDS).then((passwordHash) => {
-    const user = new User({
-      email: req.body.email,
-      name: {
-        first: req.body.name.first,
-        last: req.body.name.last
-      },
-      password: passwordHash
+  bcrypt.hash(req.body.password, SALT_ROUNDS)
+  .then(passwordHash => new User({
+    email: req.body.email,
+    name: req.body.name,
+    password: passwordHash
+  }))
+  .catch(e => next(e))
+  .then(user => user.save())
+  .catch(e => next(e))
+  .then((user) => {
+    req.session.user = user._id; // eslint-disable-line no-param-reassign
+    return res.json({
+      authentication: 'login',
+      email: user.email,
+      name: user.name
     });
-
-    const token = jwt.sign({
-      email: req.body.email
-    },
-    config.jwtSecret, {
-      expiresIn: '24h'
-    });
-
-    user.save()
-    .then(savedUser => res.json({
-      token,
-      _id: savedUser._id,
-      email: savedUser.email,
-      name: {
-        first: savedUser.name.first,
-        last: savedUser.name.last
-      }
-    }))
-    .catch(e => next(e));
-  });
+  })
+  .catch(e => next(e));
 }
 
 /**
- * Returns jwt token if valid username and password is provided
+ * Logs a user in or returns the account associated with their session cookie
+ *
  * @param req
  * @param res
  * @param next
  * @returns {*}
  */
 function login(req, res, next) {
-  // Ideally you'll fetch this from the db
-  // Idea here was to show how jwt works with simplicity
+  if (req.session) {
+    if (req.session.user) {
+      return User.get(req.session.user)
+      .then(user => res.json({
+        authentication: 'session',
+        email: user.email,
+        name: user.name
+      }))
+      .catch(() => next(new APIError('Authentication error', httpStatus.UNAUTHORIZED, true)));
+    }
+  }
 
-  User.getByEmail(req.body.email)
-  .then((user) => {
-    bcrypt.compare(req.body.password, user.password)
+  return User.getByEmail(req.body.email)
+  .then(user => (bcrypt.compare(req.body.password, user.password)
     .then((passwordCorrect) => {
       if (passwordCorrect) {
-        const token = jwt.sign({
-          email: user.email
-        },
-        config.jwtSecret, {
-          expiresIn: '24h'
-        });
+        req.session.user = user._id; // eslint-disable-line no-param-reassign
         return res.json({
-          token,
-          _id: user._id,
+          authentication: 'login',
           email: user.email,
-          name: {
-            first: user.name.first,
-            last: user.name.last
-          }
+          name: user.name
         });
       }
-      const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED, true);
-      return next(err);
-    });
-  })
-  .catch(err => next(err));
+      throw Error();
+    })
+  ))
+  .catch(() => next(new APIError('Authentication error', httpStatus.UNAUTHORIZED, true)));
 }
 
-function remove(req, res, next) {
-  const user = req.user;
-  user.remove()
-    .then(deletedUser => res.json({
-      email: deletedUser.email,
-      name: deletedUser.name
-    }))
-    .catch(e => next(e));
-}
-
-/**
- * This is a protected route. Will return random number only if jwt token is provided in header.
- * @param req
- * @param res
- * @returns {*}
- */
-function getRandomNumber(req, res) {
-  // req.user is assigned by jwt middleware if valid token is provided
-  return res.json({
-    user: req.user,
-    num: Math.random() * 100
-  });
-}
-
-export default { load, create, remove, login, getRandomNumber };
+export default { load, create, login };
