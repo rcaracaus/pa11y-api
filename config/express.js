@@ -9,6 +9,11 @@ import httpStatus from 'http-status';
 import expressWinston from 'express-winston';
 import expressValidation from 'express-validation';
 import helmet from 'helmet';
+// import express-session and the MongoStore to store session data
+import session from 'express-session';
+import connectMongo from 'connect-mongo';
+const MongoStore = connectMongo(session);
+
 import winstonInstance from './winston';
 import routes from '../server/routes/index.route';
 import config from './config';
@@ -49,6 +54,14 @@ if (config.env === 'development') {
   }));
 }
 
+app.use(session({
+  secret: config.jwtSecret,
+  resave: false,
+  saveUnitialized: true,
+  cookie: { secure: (config.env === 'production'), maxAge: null },
+  store: new MongoStore({ mongooseConnection: mongoose.connection })
+}));
+
 // mount all routes on /api path
 app.use('/api', routes);
 
@@ -86,5 +99,29 @@ app.use((err, req, res, next) => // eslint-disable-line no-unused-vars
     stack: config.env === 'development' ? err.stack : {}
   })
 );
+
+// moved from index.js
+import mongoose from 'mongoose';
+import util from 'util';
+
+// make bluebird default Promise
+Promise = require('bluebird'); // eslint-disable-line no-global-assign
+
+// plugin bluebird promise in mongoose
+mongoose.Promise = Promise;
+
+// connect to mongo db
+const mongoUri = `${config.mongo.host}:${config.mongo.port}/${config.mongo.db}?authSource=admin`;
+mongoose.connect(mongoUri, { server: { socketOptions: { keepAlive: 1 } } });
+mongoose.connection.on('error', () => {
+  throw new Error(`unable to connect to database: ${mongoUri}`);
+});
+
+// print mongoose logs in dev env
+if (config.MONGOOSE_DEBUG) {
+  mongoose.set('debug', (collectionName, method, query, doc) => {
+    debug(`${collectionName}.${method}`, util.inspect(query, false, 20), doc);
+  });
+}
 
 export default app;

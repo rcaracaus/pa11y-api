@@ -77,7 +77,6 @@ function login(req, res, next) {
   .then(user => {
     return bcrypt.compare(req.body.password, user.password)
     .then(passwordCorrect => {
-      console.log(user, passwordCorrect);
       if (passwordCorrect) {
         req.session.user = user._id; // set user id in database session
         return res.json({
@@ -86,10 +85,9 @@ function login(req, res, next) {
           name: user.name
         });
       }
-      else throw Error();
     });
   })
-  .catch(() => next(new APIError('Authentication error', httpStatus.UNAUTHORIZED, true)));
+  .catch((err) => next(err));
 }
 
 /**

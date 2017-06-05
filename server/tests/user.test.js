@@ -24,7 +24,7 @@ describe('## User APIs', () => {
         .post('/api/user')
         .send(testUser)
         .expect(httpStatus.OK)
-        .then((res) => {
+        .then(res => {
           expect(res.body.email).to.equal(testUser.email);
           expect(res.body.name).to.deep.equal(testUser.name);
           testUser._id = res.body._id;
@@ -35,7 +35,19 @@ describe('## User APIs', () => {
   });
 
   describe('# POST /api/user/login', () => {
-    it('should return Authentication error', (done) => {
+    it('should be able to log in', (done) => {
+      request(app)
+        .post('/api/user/login')
+        .send(testUser)
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.email).to.equal(testUser.email);
+          expect(res.body.name).to.deep.equal(testUser.name);
+        })
+        .catch(done);
+    });
+
+    it('should return Authentication error on fail', (done) => {
       request(app)
         .post('/api/user/login')
         .send({
@@ -50,19 +62,17 @@ describe('## User APIs', () => {
         .catch(done);
     });
 
-    it('should get valid session cookie', (done) => {
+    it('should return session log in after first log in', (done) => {
       request(app)
         .post('/api/user/login')
-        .send(testUser)
-        .expect(httpStatus.OK)
+        .send({
+          email: testUser.email,
+          password: `wrong${testUser.password}wrong`
+        })
+        .expect(httpStatus.UNAUTHORIZED)
         .then((res) => {
-          expect(res.body).to.have.property('token');
-          jwt.verify(res.body.token, config.jwtSecret, (err, decoded) => {
-            expect(err).to.not.be.ok; // eslint-disable-line no-unused-expressions
-            expect(decoded.email).to.equal(testUser.email);
-            jwtToken = `Bearer ${res.body.token}`;
-            done();
-          });
+          expect(res.body.message).to.equal('Authentication error');
+          done();
         })
         .catch(done);
     });
