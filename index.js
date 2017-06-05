@@ -1,7 +1,9 @@
 import config from './config/config';
-import app from './config/express';
+import expressApp from './config/express';
 
 const debug = require('debug')('pa11y-api:index');
+
+const app = expressApp(debug);
 
 // module.parent check is required to support mocha watch
 // src: https://github.com/mochajs/mocha/issues/1912
