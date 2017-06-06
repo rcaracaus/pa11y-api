@@ -59,7 +59,11 @@ export default (debug) => {
     secret: config.jwtSecret,
     resave: false,
     saveUnitialized: true,
-    cookie: { secure: (config.env === 'production'), maxAge: null },
+    cookie: {
+      name: '860f016641bc5e2ac3fab191ad9965253b139cc4b6102c7c6b8a9df7dde9cb81120c43236dcbc8de4c18dbff7d11c3d78868babeba42d1800dcb498f2dc173af',
+      secure: (config.env === 'production'),
+      maxAge: null
+    },
     store: new MongoStore({ mongooseConnection: mongoose.connection })
   }));
 

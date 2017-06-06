@@ -15,21 +15,6 @@ describe('## User APIs', () => {
     password: 'hello$!/world'
   };
 
-  describe('# POST /api/user', () => {
-    it('should return a new user', (done) => {
-      request(app)
-        .post('/api/user')
-        .send(testUser)
-        .expect(httpStatus.OK)
-        .then((res) => {
-          expect(res.body.email).to.equal(testUser.email);
-          expect(res.body.name).to.deep.equal(testUser.name);
-          done();
-        })
-        .catch(done);
-    });
-  });
-
   describe('# POST /api/user/login', () => {
     it('should be able to log in', (done) => {
       request(app)
