@@ -11,14 +11,11 @@ import expressValidation from 'express-validation';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
 import util from 'util';
-import session from 'express-session';
-import connectMongo from 'connect-mongo';
 import winstonInstance from './winston';
 import routes from '../server/routes/index.route';
 import config from './config';
 import APIError from '../server/helpers/APIError';
 
-const MongoStore = connectMongo(session);
 const app = express();
 
 export default (debug) => {
@@ -54,18 +51,6 @@ export default (debug) => {
       colorStatus: true // Color the status code (default green, 3XX cyan, 4XX yellow, 5XX red).
     }));
   }
-
-  app.use(session({
-    name: '860f016641bc5e2ac3fab191ad9965253b139cc4b6102c7c6b8a9df7dde9cb81120c43236dcbc8de4c18dbff7d11c3d78868babeba42d1800dcb498f2dc173af',
-    secret: config.jwtSecret,
-    resave: false,
-    saveUnitialized: true,
-    cookie: {
-      secure: (config.env === 'production'),
-      maxAge: null
-    },
-    store: new MongoStore({ mongooseConnection: mongoose.connection })
-  }));
 
   // mount all routes on /api path
   app.use('/api', routes);

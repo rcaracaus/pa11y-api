@@ -1,21 +1,11 @@
+import jwt from 'jsonwebtoken';
 import httpStatus from 'http-status';
 import bcrypt from 'bcrypt';
+import config from '../../config/config';
 import APIError from '../helpers/APIError';
 import User from '../models/user.model';
 
 const SALT_ROUNDS = 9;
-
-/**
- * Load report and append to req.
- */
-function load(req, res, next, id) {
-  User.get(id)
-    .then((user) => {
-      req.user = user; // eslint-disable-line no-param-reassign
-      return next();
-    })
-    .catch(e => next(e));
-}
 
 /**
  * Creates a new user
@@ -26,7 +16,8 @@ function load(req, res, next, id) {
  * @return {*}
  */
 function create(req, res, next) {
-  bcrypt.hash(req.body.password, SALT_ROUNDS)
+  bcrypt
+  .hash(req.body.password, SALT_ROUNDS)
   .then(passwordHash => new User({
     email: req.body.email,
     name: req.body.name,
@@ -36,8 +27,9 @@ function create(req, res, next) {
   .then(user => user.save())
   .catch(e => next(e))
   .then((user) => {
-    req.session.user = user._id; // eslint-disable-line no-param-reassign
+    const accessToken = jwt.sign({ email: user.email }, config.jwtSecret, { expiresIn: '24h' });
     return res.json({
+      token: accessToken,
       authentication: 'login',
       email: user.email,
       name: user.name
@@ -47,7 +39,7 @@ function create(req, res, next) {
 }
 
 /**
- * Logs a user in or returns the account associated with their session cookie
+ * Logs a user in by creating an access token for their account
  *
  * @param req
  * @param res
@@ -55,24 +47,14 @@ function create(req, res, next) {
  * @returns {*}
  */
 function login(req, res, next) {
-  if (req.session) {
-    if (req.session.user) {
-      return User.get(req.session.user)
-      .then(user => res.json({
-        authentication: 'session',
-        email: user.email,
-        name: user.name
-      }))
-      .catch(() => next(new APIError('Authentication error', httpStatus.UNAUTHORIZED, true)));
-    }
-  }
-
-  return User.getByEmail(req.body.email)
+  User
+  .getByEmail(req.body.email)
   .then(user => (bcrypt.compare(req.body.password, user.password)
     .then((passwordCorrect) => {
+      const accessToken = jwt.sign({ email: user.email }, config.jwtSecret, { expiresIn: '24h' });
       if (passwordCorrect) {
-        req.session.user = user._id; // eslint-disable-line no-param-reassign
         return res.json({
+          token: accessToken,
           authentication: 'login',
           email: user.email,
           name: user.name
@@ -81,7 +63,45 @@ function login(req, res, next) {
       throw Error();
     })
   ))
-  .catch(() => next(new APIError('Authentication error', httpStatus.UNAUTHORIZED, true)));
+  .catch(() => next(new APIError('Unauthorized', httpStatus.UNAUTHORIZED, true)));
 }
 
-export default { load, create, login };
+/**
+ * Verifies an access token and returns information about the associated user
+ *
+ * @param req
+ * @param res
+ * @param next
+ * @returns {*}
+ */
+function authenticate(req, res, next) {
+  if (req.user.email) {
+    User
+    .getByEmail(req.user.email)
+    .then(user => res.json({
+      authentication: 'token',
+      email: user.email,
+      name: user.name
+    }))
+    .catch(() => next(new APIError('Unauthorized', httpStatus.UNAUTHORIZED, true)));
+  }
+}
+
+/**
+ * Reads an access token and deletes the associated users account
+ *
+ * @param  req
+ * @param  res
+ * @param  {Function} next
+ * @return {*}
+ */
+function remove(req, res, next) {
+  if (req.user.email) {
+    User
+    .removeByEmail(req.user.email)
+    .then(() => res.json({ message: 'User deleted' }))
+    .catch(e => next(e));
+  }
+}
+
+export default { create, login, authenticate, remove };

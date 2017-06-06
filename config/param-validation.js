@@ -79,13 +79,6 @@ export default {
     }
   },
 
-  // DELETE /api/user
-  removeUser: {
-    params: {
-      userId: Joi.string().hex().required()
-    }
-  },
-
   // POST /api/user/login
   login: {
     body: {

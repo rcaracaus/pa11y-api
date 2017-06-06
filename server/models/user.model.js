@@ -38,6 +38,17 @@ UserSchema.statics = {
       });
   },
 
+  removeByEmail(email) {
+    return this.remove({ email: new RegExp(email, 'i') })
+      .exec()
+      .then((user) => {
+        if (user) {
+          return user;
+        }
+        return Promise.reject(new APIError('No such user exists!', httpStatus.NOT_FOUND));
+      });
+  },
+
   get(id) {
     return this.findById(id)
       .exec()
