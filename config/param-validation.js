@@ -36,7 +36,8 @@ export default {
     body: {
       rootUrl: Joi.string().required(),
       standard: Joi.string().required(),
-      urls: Joi.array().items(Joi.string())
+      urls: Joi.array().items(Joi.string()),
+      codes: Joi.array().items(Joi.string())
     }
   },
 
@@ -45,7 +46,8 @@ export default {
     body: {
       urls: Joi.array().items(Joi.string()),
       standard: Joi.string(),
-      progress: Joi.number()
+      progress: Joi.number(),
+      codes: Joi.array().items(Joi.string())
     },
     params: {
       reportId: Joi.string().hex().required()
@@ -64,11 +66,25 @@ export default {
     }
   },
 
-  // POST /api/auth/login
+  // POST /api/user
+  createUser: {
+    body: {
+      email: Joi.string().email(),
+      name: Joi.object().keys({
+        first: Joi.string().regex(/^[A-Z]+$/i).required(),
+        last: Joi.string().regex(/^[A-Z]+$/i).required()
+      }).unknown(false).required(),
+      // allow alphanum /$_.-!@#
+      password: Joi.string().regex(/^[A-Z0-9/$_.\-!@#]{8,30}$/i).required()
+    }
+  },
+
+  // POST /api/user/login
   login: {
     body: {
-      username: Joi.string().required(),
-      password: Joi.string().required()
+      email: Joi.string().email().required(),
+      // allow alphanum /$_.-!@#
+      password: Joi.string().regex(/^[A-Z0-9/$_.\-!@#]{8,30}$/i).required()
     }
   }
 };

@@ -49,6 +49,7 @@ function update(req, res, next) {
   report.urls = req.body.urls || report.urls;
   report.standard = req.body.standard || report.standard;
   report.progress = req.body.progress || report.progress;
+  report.codes = req.body.codes || report.codes;
 
   report.save()
     .then(savedReport => res.json(savedReport))

@@ -20,6 +20,7 @@ const ReportSchema = new mongoose.Schema({
     required: true
   },
   urls: [String],
+  codes: [String],
   createdAt: {
     type: Date,
     default: Date.now
